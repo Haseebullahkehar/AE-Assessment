@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Applicant Tracker – Automation Engineer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --bg: #f8fafc;
+  --white: #ffffff;
+  --dark: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #3b82f6;
+  --good: #10b981;
+  --good-bg: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  --input-bg: #ffffff;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+  --radius: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--dark);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.nav-brand span { color: var(--primary); }
+
+.nav-tabs { display: flex; gap: 4px; }
+
+.nav-tab {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  color: rgba(255,255,255,0.7);
+  background: transparent;
+}
+
+.nav-tab.active, .nav-tab:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.nav-tab.active { color: var(--primary); background: rgba(59,130,246,0.15); }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ══════════════════════════════
+   FORM PAGE
+══════════════════════════════ */
+.form-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.form-header {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.form-header .tag {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.form-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  color: var(--dark);
+}
+
+.form-header p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* sections */
+.form-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.form-section:nth-child(2) { animation-delay: 0.05s; }
+.form-section:nth-child(3) { animation-delay: 0.10s; }
+.form-section:nth-child(4) { animation-delay: 0.15s; }
+.form-section:nth-child(5) { animation-delay: 0.20s; }
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field { margin-bottom: 20px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.req { color: var(--error); font-size: 12px; }
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--dark);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  outline: none;
+  appearance: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  background: var(--input-bg);
+}
+
+.field textarea { resize: vertical; min-height: 100px; line-height: 1.6; font-size: 14px; }
+
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* checkbox */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.checkbox-row:hover { border-color: var(--dark); }
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--dark);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkbox-row span {
+  font-size: 14px;
+  color: var(--dark);
+  user-select: none;
+}
+
+/* ── FILE UPLOAD ── */
+.file-upload-box {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--input-bg);
+}
+
+.file-upload-box:hover {
+  border-color: var(--dark);
+  background: #f0efea;
+}
+
+.file-upload-box.drag-over {
+  border-color: var(--dark);
+  background: #ebebE4;
+  transform: scale(1.01);
+}
+
+.file-upload-box.has-file {
+  border-style: solid;
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.file-icon { font-size: 28px; margin-bottom: 8px; }
+
+.file-upload-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.file-upload-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.file-preview {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--good-bg);
+  border: 1px solid var(--good);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--good);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.file-preview .remove-file {
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--good);
+  background: none;
+  border: none;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.file-preview .remove-file:hover { color: var(--notfit); }
+
+/* ── STAR RATING ── */
+.star-field { margin-bottom: 20px; }
+.star-field:last-child { margin-bottom: 0; }
+
+.star-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.star-label .req { color: var(--error); }
+
+.star-value-badge {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--primary);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  min-width: 40px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.star-value-badge.lit { background: var(--warning); color: #fff; }
+
+.stars {
+  display: flex;
+  gap: 6px;
+}
+
+.star {
+  font-size: 28px;
+  cursor: pointer;
+  color: #ddd;
+  transition: color 0.15s, transform 0.1s;
+  user-select: none;
+  line-height: 1;
+}
+
+.star:hover { transform: scale(1.2); color: var(--warning); }
+.star.on { color: var(--warning); }
+
+.star-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+}
+
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* success state */
+.success-banner {
+  display: none;
+  background: var(--good-bg);
+  border: 1px solid var(--good);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.success-banner.show { display: block; animation: fadeUp 0.4s ease; }
+.success-banner h3 { font-family: 'Syne', sans-serif; color: var(--good); margin-bottom: 6px; font-size: 16px; }
+.success-banner p { font-size: 14px; color: var(--good); }
+
+/* error banner */
+.error-banner {
+  display: none;
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--error);
+}
+.error-banner.show { display: block; animation: fadeUp 0.3s ease; }
+
+/* ══════════════════════════════
+   DASHBOARD PAGE
+══════════════════════════════ */
+.dashboard-page { padding: 32px 40px 80px; max-width: 1200px; margin: 0 auto; }
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dash-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.dash-header p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+/* stats row */
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.stat-card .stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-card .stat-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+.stat-card.good .stat-num { color: var(--good); }
+.stat-card.warning .stat-num { color: var(--warning); }
+.stat-card.error .stat-num { color: var(--error); }
+
+/* filters */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(59,130,246,0.05); }
+.filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.filter-btn.good.active { background: var(--good); border-color: var(--good); }
+.filter-btn.warning.active { background: var(--warning); border-color: var(--warning); }
+.filter-btn.error.active { background: var(--error); border-color: var(--error); }
+
+.search-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  background: var(--white);
+  width: 220px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus { border-color: var(--primary); }
+
+/* table */
+.table-wrap {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead { background: #f9fafb; }
+
+th {
+  text-align: left;
+  padding: 14px 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 14px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tbody tr {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+tbody tr:hover { background: #f9fafb; }
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0px;
+}
+
+.score-badge.good   { background: var(--good-bg);   color: var(--good);   }
+.score-badge.warning  { background: var(--warning-bg);  color: var(--warning);  }
+.score-badge.error { background: var(--error-bg); color: var(--error); }
+
+.avg-rating {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* loading */
+.loading { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+
+/* ══════════════════════════════
+   DETAIL MODAL
+══════════════════════════════ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.modal-overlay.open { display: flex; align-items: flex-start; justify-content: flex-end; }
+
+.modal {
+  background: var(--white);
+  width: 440px;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.modal-header {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 1;
+}
+
+.modal-header h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.modal-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.modal-close:hover { border-color: var(--primary); background: rgba(59,130,246,0.1); color: var(--primary); }
+
+.modal-body { padding: 24px; }
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-of-type { border-bottom: none; }
+
+.detail-key {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: 'Syne', sans-serif;
+}
+
+.detail-val {
+  font-size: 14px;
+  color: var(--dark);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.rating-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.rating-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.rating-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.rating-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* status update */
+.status-update {
+  background: #f9fafb;
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 20px;
+  border: 1px solid var(--border);
+}
+
+.status-update h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.status-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-opt {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--muted);
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.status-opt:hover { border-color: var(--dark); color: var(--dark); }
+.status-opt.selected { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+.update-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--dark);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.update-btn:hover { background: #2a2a3e; }
+.update-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.update-msg {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+  color: var(--good);
+  display: none;
+}
+
+.update-msg.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ── CONFIG — replace with your actual n8n webhook URL ── -->
+<script>
+  const N8N_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL'; // e.g. https://your-n8n.app.n8n.cloud/webhook/recruitment-intake
+  const AIRTABLE_BASE_ID = 'YOUR_AIRTABLE_BASE_ID';
+  const AIRTABLE_TABLE_ID = 'YOUR_AIRTABLE_TABLE_ID';
+  const AIRTABLE_TOKEN = 'YOUR_AIRTABLE_TOKEN';
+</script>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Applicant Tracker <span>·</span> AE</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('form')">Apply Now</button>
+    <button class="nav-tab" onclick="showPage('dashboard')">Dashboard</button>
+  </div> 
+</nav>
+
+<!-- ══════════════════════════════
+     FORM PAGE
+══════════════════════════════ -->
+<div id="page-form" class="page active">
+<div class="form-page">
+
+  <div class="form-header">
+    <div class="tag">We're Hiring</div>
+    <h1>Applicant Tracker<br>Automation Engineer</h1>
+    <p>This form will take 5m to complete. Once you complete this expect to hear from us within 24–48h for an interview — we move fast.</p>
+  </div>
+
+  <div id="error-banner" class="error-banner"></div>
+
+  <!-- PERSONAL INFO -->
+  <div class="form-section">
+    <div class="section-title">Personal Information</div>
+
+    <div class="field">
+      <label>Name <span class="req">*</span></label>
+      <input type="text" id="f-name" placeholder="Your full name" required>
+    </div>
+
+    <div class="field">
+      <label>Email <span class="req">*</span></label>
+      <input type="email" id="f-email" placeholder="you@example.com" required>
+    </div>
+
+    <div class="field">
+      <label>WhatsApp Number</label>
+      <input type="text" id="f-whatsapp" placeholder="+92 300 0000000">
+    </div>
+
+    <div class="field">
+      <label>LinkedIn Profile <span class="req">*</span></label>
+      <input type="url" id="f-linkedin" placeholder="https://linkedin.com/in/yourname" required>
+    </div>
+
+    <div class="field">
+      <label>Are you based in Karachi and can work hybrid? <span class="req">*</span></label>
+      <input type="text" id="f-karachi" placeholder="e.g. Yes, I am based in Karachi and can work hybrid" required>
+    </div>
+
+    <div class="field">
+      <label>Location <span class="req">*</span></label>
+      <input type="text" id="f-location" placeholder="e.g. Dubai, United Arab Emirates (MUST add country name)" required>
+    </div>
+  </div>
+
+  <!-- ROLE INFO -->
+  <div class="form-section">
+    <div class="section-title">Role Details</div>
+
+    <div class="field">
+      <label>Current Role <span class="req">*</span></label>
+      <input type="text" id="f-role" placeholder="e.g. Automation Engineer" required>
+    </div>
+
+    <div class="field">
+      <label>Applying For <span class="req">*</span></label>
+      <select id="f-applying">
+        <option value="Automation Specialist">Automation Specialist</option>
+        <option value="Automation Engineer">Automation Engineer</option>
+        <option value="n8n Developer">n8n Developer</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>If you were hired, what would be your notice period? <span class="req">*</span></label>
+      <select id="f-notice">
+        <option value="">Select notice period...</option>
+        <option value="Immediate">Immediate</option>
+        <option value="2 weeks">2 weeks</option>
+        <option value="1 month">1 month</option>
+        <option value="2 months">2 months</option>
+        <option value="3 months+">3 months+</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Resume / CV <span class="req">*</span></label>
+      <div class="file-upload-box" id="file-upload-box" onclick="document.getElementById('f-resume').click()">
+        <input type="file" id="f-resume" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" style="display:none" onchange="handleFileUpload(this)">
+        <div id="file-upload-content">
+          <div class="file-icon">📄</div>
+          <div class="file-upload-text">Click to upload your CV / Resume</div>
+          <div class="file-upload-hint">PDF, DOC, DOCX supported · Max 10MB</div>
+        </div>
+      </div>
+      <div id="file-preview" class="file-preview" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- RATINGS -->
+  <div class="form-section">
+    <div class="section-title">Skills & Experience Ratings</div>
+
+    <div class="star-field">
+      <div class="star-label">
+        <span>AI Automation Experience</span>
+        <span class="star-value-badge" id="badge-ai">0</span>
+      </div>
+      <div class="stars" id="stars-ai" data-field="ai"></div>
+      <div class="star-hint">Rate yourself from 1 (beginner) to 10 (expert)</div>
+    </div>
+
+    <div class="star-field">
+      <div class="star-label">
+        <span>Make.com / n8n Experience &amp; Expertise <span class="req">*</span></span>
+        <span class="star-value-badge" id="badge-n8n">0</span>
+      </div>
+      <div class="stars" id="stars-n8n" data-field="n8n"></div>
+      <div class="star-hint">Rate yourself from 1 (beginner) to 10 (expert)</div>
+    </div>
+
+    <div class="star-field">
+      <div class="star-label">
+        <span>Vibe-coding (Claude Code/Cursor) Experience &amp; Expertise <span class="req">*</span></span>
+        <span class="star-value-badge" id="badge-vibe">0</span>
+      </div>
+      <div class="stars" id="stars-vibe" data-field="vibe"></div>
+      <div class="star-hint">Rate yourself from 1 (beginner) to 10 (expert)</div>
+    </div>
+  </div>
+
+  <!-- OPEN QUESTION -->
+  <div class="form-section">
+    <div class="section-title">Your Best Work</div>
+    <div class="field">
+      <label>Describe one automation or internal system you built that you're proud of <span class="req">*</span></label>
+      <textarea id="f-proud" placeholder="Include:&#10;1. The Problem&#10;2. The Workflow&#10;3. Tools Used&#10;&#10;A Loom recording link would be ideal for this." required></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+    Submit Application →
+  </button>
+
+  <div class="success-banner" id="success-banner">
+    <h3>✅ Application Submitted!</h3>
+    <p>Thank you! We'll be in touch within 24–48 hours.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     DASHBOARD PAGE
+══════════════════════════════ -->
+<div id="page-dashboard" class="page">
+<div class="dashboard-page">
+
+  <div class="dash-header">
+    <div>
+      <h2>Candidates Dashboard</h2>
+      <p>All applications from Airtable · Table - Haseebullah</p>
+    </div>
+    <button class="filter-btn" onclick="loadCandidates()" style="border-radius:8px; padding:8px 18px;">↻ Refresh</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">–</div>
+      <div class="stat-label">Total Applicants</div>
+    </div>
+    <div class="stat-card good">
+      <div class="stat-num" id="stat-good">–</div>
+      <div class="stat-label">Good Fit</div>
+    </div>
+    <div class="stat-card maybe">
+      <div class="stat-num" id="stat-maybe">–</div>
+      <div class="stat-label">Maybe</div>
+    </div>
+    <div class="stat-card notfit">
+      <div class="stat-num" id="stat-notfit">–</div>
+      <div class="stat-label">Not Fit</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn good" onclick="setFilter('Good Fit', this)">✅ Good Fit</button>
+    <button class="filter-btn maybe" onclick="setFilter('Maybe', this)">🤔 Maybe</button>
+    <button class="filter-btn notfit" onclick="setFilter('Not Fit', this)">❌ Not Fit</button>
+    <input class="search-input" id="search-input" type="text" placeholder="Search by name or email…" oninput="renderTable()">
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div id="table-container">
+      <div class="loading">Loading candidates…</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <h3 id="modal-name">–</h3>
+        <div id="modal-score-badge" style="margin-top:6px"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════
+//  FILE UPLOAD HANDLER
+// ══════════════════════════════
+let uploadedFileBase64 = null;
+let uploadedFileExtension = null;
+let uploadedFileName = null;
+
+function handleFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Size check — 10MB max
+  if (file.size > 10 * 1024 * 1024) {
+    showError('File is too large. Please upload a file under 10MB.');
+    input.value = '';
+    return;
+  }
+
+  uploadedFileName = file.name;
+  uploadedFileExtension = file.name.split('.').pop().toLowerCase();
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadedFileBase64 = e.target.result; // full data URI e.g. data:application/pdf;base64,...
+
+    // Update UI
+    const box = document.getElementById('file-upload-box');
+    box.classList.add('has-file');
+    document.getElementById('file-upload-content').innerHTML = `
+      <div class="file-icon">✅</div>
+      <div class="file-upload-text">${file.name}</div>
+      <div class="file-upload-hint">${(file.size / 1024).toFixed(1)} KB · Click to change</div>
+    `;
+
+    const preview = document.getElementById('file-preview');
+    preview.style.display = 'flex';
+    preview.innerHTML = `
+      <span>📎 ${file.name} ready to upload</span>
+      <button class="remove-file" onclick="removeFile(event)">✕</button>
+    `;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeFile(e) {
+  e.stopPropagation();
+  uploadedFileBase64 = null;
+  uploadedFileExtension = null;
+  uploadedFileName = null;
+
+  document.getElementById('f-resume').value = '';
+  document.getElementById('file-upload-box').classList.remove('has-file');
+  document.getElementById('file-upload-content').innerHTML = `
+    <div class="file-icon">📄</div>
+    <div class="file-upload-text">Click to upload your CV / Resume</div>
+    <div class="file-upload-hint">PDF, DOC, DOCX supported · Max 10MB</div>
+  `;
+  document.getElementById('file-preview').style.display = 'none';
+}
+
+// Drag and drop support
+document.addEventListener('DOMContentLoaded', () => {
+  const box = document.getElementById('file-upload-box');
+  if (!box) return;
+  box.addEventListener('dragover', (e) => { e.preventDefault(); box.classList.add('drag-over'); });
+  box.addEventListener('dragleave', () => box.classList.remove('drag-over'));
+  box.addEventListener('drop', (e) => {
+    e.preventDefault();
+    box.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const input = document.getElementById('f-resume');
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      handleFileUpload(input);
+    }
+  });
+});
+
+function showError(msg) {
+  const banner = document.getElementById('error-banner');
+  banner.textContent = '⚠️ ' + msg;
+  banner.className = 'error-banner show';
+}
+
+// ══════════════════════════════
+//  STAR RATINGS
+// ══════════════════════════════
+const ratings = { ai: 0, n8n: 0, vibe: 0 };
+
+function buildStars(containerId, field) {
+  const container = document.getElementById(containerId);
+  for (let i = 1; i <= 10; i++) {
+    const star = document.createElement('span');
+    star.className = 'star';
+    star.textContent = '★';
+    star.dataset.val = i;
+    star.addEventListener('click', () => setRating(field, i));
+    star.addEventListener('mouseenter', () => hoverRating(field, i));
+    star.addEventListener('mouseleave', () => resetHover(field));
+    container.appendChild(star);
+  }
+}
+
+function setRating(field, val) {
+  ratings[field] = val;
+  updateStars(field, val);
+  const badge = document.getElementById('badge-' + field);
+  badge.textContent = val;
+  badge.className = 'star-value-badge lit';
+}
+
+function hoverRating(field, val) {
+  updateStars(field, val);
+}
+
+function resetHover(field) {
+  updateStars(field, ratings[field]);
+}
+
+function updateStars(field, val) {
+  const fieldMap = { ai: 'stars-ai', n8n: 'stars-n8n', vibe: 'stars-vibe' };
+  const stars = document.getElementById(fieldMap[field]).querySelectorAll('.star');
+  stars.forEach(s => {
+    s.classList.toggle('on', Number(s.dataset.val) <= val);
+  });
+}
+
+// toggleKarachi function no longer needed as it's now a text field
+
+buildStars('stars-ai', 'ai');
+buildStars('stars-n8n', 'n8n');
+buildStars('stars-vibe', 'vibe');
+
+// ══════════════════════════════
+//  FORM SUBMIT
+// ══════════════════════════════
+async function submitForm() {
+  const btn = document.getElementById('submit-btn');
+  const errorBanner = document.getElementById('error-banner');
+  const successBanner = document.getElementById('success-banner');
+
+  errorBanner.className = 'error-banner';
+
+  const payload = {
+    Name: document.getElementById('f-name').value.trim(),
+    Email: document.getElementById('f-email').value.trim(),
+    WhatsApp_Number: document.getElementById('f-whatsapp').value.trim(),
+    LinkedIn_Profile: document.getElementById('f-linkedin').value.trim(),
+    Based_in_Karachi: document.getElementById('f-karachi').value.trim(),
+    Location: document.getElementById('f-location').value.trim(),
+    Current_Role: document.getElementById('f-role').value.trim(),
+    Applying_For: document.getElementById('f-applying').value,
+    Notice_Period: document.getElementById('f-notice').value,
+    Resume_CV: '',  // set after Drive upload by n8n
+    Rating_AI_Automation: ratings.ai,
+    Rating_n8n_Make: ratings.n8n,
+    Rating_Vibe_Coding: ratings.vibe,
+    Proud_Automation_Description: document.getElementById('f-proud').value.trim()
+  };
+
+  // client-side validation
+  const required = ['Name','Email','LinkedIn_Profile','Location','Current_Role','Notice_Period','Proud_Automation_Description'];
+  const missing = required.filter(k => !payload[k]);
+  if (missing.length) {
+    showError('Please fill in all required fields: ' + missing.join(', '));
+    return;
+  }
+  if (!uploadedFileBase64) {
+    showError('Please upload your Resume / CV before submitting.');
+    return;
+  }
+  if (payload.Rating_n8n_Make === 0 || payload.Rating_Vibe_Coding === 0) {
+    showError('Please rate your n8n and Vibe-coding experience.');
+    return;
+  }
+
+  // Attach file data to payload
+  payload.Resume_CV_Base64 = uploadedFileBase64;
+  payload.Resume_CV_Extension = uploadedFileExtension;
+  payload.Resume_CV_FileName = uploadedFileName;
+  payload.Resume_CV = ''; // will be filled by n8n after Drive upload
+
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  try {
+    // If webhook URL is set, POST to n8n; otherwise write directly to Airtable
+    if (N8N_WEBHOOK_URL && N8N_WEBHOOK_URL !== 'YOUR_N8N_WEBHOOK_URL_HERE') {
+      const res = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('Submission failed');
+    } else {
+      // Direct Airtable write (fallback when webhook not set)
+      await writeToAirtable(payload);
+    }
+
+    btn.style.display = 'none';
+    successBanner.className = 'success-banner show';
+  } catch (err) {
+    errorBanner.textContent = '❌ Submission failed. Please try again or contact us.';
+    errorBanner.className = 'error-banner show';
+    btn.textContent = 'Submit Application →';
+    btn.disabled = false;
+  }
+}
+
+async function writeToAirtable(payload) {
+  // NOTE: Direct Airtable fallback cannot upload to Google Drive.
+  // File upload to Drive only works when n8n webhook URL is configured.
+  // This fallback stores a placeholder so the record is not lost.
+  const avg = (payload.Rating_AI_Automation + payload.Rating_n8n_Make + payload.Rating_Vibe_Coding) / 3;
+  const score = avg >= 7 ? 'Good Fit' : avg >= 4 ? 'Maybe' : 'Not Fit';
+  const status = score === 'Good Fit' ? 'Shortlisted' : score === 'Not Fit' ? 'Rejected' : 'New';
+
+  const fields = {
+    Name: payload.Name,
+    Email: payload.Email,
+    WhatsApp_Number: payload.WhatsApp_Number,
+    LinkedIn_Profile: payload.LinkedIn_Profile,
+    Based_in_Karachi: payload.Based_in_Karachi,
+    Location: payload.Location,
+    Current_Role: payload.Current_Role,
+    Applying_For: payload.Applying_For,
+    Notice_Period: payload.Notice_Period,
+    Resume_CV: '[File uploaded — configure n8n webhook to enable Drive upload]',
+    Rating_AI_Automation: payload.Rating_AI_Automation,
+    Rating_n8n_Make: payload.Rating_n8n_Make,
+    Rating_Vibe_Coding: payload.Rating_Vibe_Coding,
+    Average_Rating: Math.round(avg * 100) / 100,
+    Proud_Automation_Description: payload.Proud_Automation_Description,
+    Score: score,
+    Status: status
+  };
+
+  const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ fields })
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Airtable write failed');
+  }
+}
+
+// ══════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════
+let allCandidates = [];
+let currentFilter = 'all';
+let currentRecord = null;
+let selectedStatus = null;
+
+async function loadCandidates() {
+  document.getElementById('table-container').innerHTML = '<div class="loading">Loading candidates…</div>';
+
+  try {
+    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?pageSize=100`;
+    const res = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
+    });
+    const data = await res.json();
+    allCandidates = (data.records || []).map(r => ({ id: r.id, ...r.fields }));
+    updateStats();
+    renderTable();
+  } catch (err) {
+    document.getElementById('table-container').innerHTML = '<div class="loading">⚠️ Failed to load. Check your Airtable token.</div>';
+  }
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = allCandidates.length;
+  document.getElementById('stat-good').textContent  = allCandidates.filter(c => c.Score === 'Good Fit').length;
+  document.getElementById('stat-maybe').textContent  = allCandidates.filter(c => c.Score === 'Maybe').length;
+  document.getElementById('stat-notfit').textContent = allCandidates.filter(c => c.Score === 'Not Fit').length;
+}
+
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  let list = allCandidates;
+
+  if (currentFilter !== 'all') list = list.filter(c => c.Score === currentFilter);
+  if (search) list = list.filter(c =>
+    (c.Name||'').toLowerCase().includes(search) ||
+    (c.Email||'').toLowerCase().includes(search)
+  );
+
+  if (!list.length) {
+    document.getElementById('table-container').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>No candidates found.</p>
+      </div>`;
+    return;
+  }
+
+  const rows = list.map(c => {
+    const score = c.Score || '–';
+    const cls = score === 'Good Fit' ? 'good' : score === 'Maybe' ? 'maybe' : score === 'Not Fit' ? 'notfit' : '';
+    const icon = score === 'Good Fit' ? '✅' : score === 'Maybe' ? '🤔' : score === 'Not Fit' ? '❌' : '';
+    const avg = c.Average_Rating ? Number(c.Average_Rating).toFixed(1) : '–';
+    const date = c.Date_Submitted ? new Date(c.Date_Submitted).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : (c.createdTime ? new Date(c.createdTime).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '–');
+    return `<tr onclick="openModal('${c.id}')">
+      <td><strong>${c.Name || '–'}</strong><br><span style="color:var(--muted);font-size:12px">${c.Email||''}</span></td>
+      <td><span class="score-badge ${cls}">${icon} ${score}</span></td>
+      <td><span class="avg-rating">${avg}</span><span style="color:var(--muted);font-size:11px"> /10</span></td>
+      <td>${c.Location || '–'}</td>
+      <td>${c.Status || '–'}</td>
+      <td style="color:var(--muted)">${date}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('table-container').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>Score</th>
+          <th>Avg Rating</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ══════════════════════════════
+//  MODAL
+// ══════════════════════════════
+function openModal(id) {
+  const c = allCandidates.find(x => x.id === id);
+  if (!c) return;
+  currentRecord = c;
+  selectedStatus = c.Status || 'New';
+
+  const score = c.Score || '–';
+  const cls = score === 'Good Fit' ? 'good' : score === 'Maybe' ? 'maybe' : 'notfit';
+  const icon = score === 'Good Fit' ? '✅' : score === 'Maybe' ? '🤔' : '❌';
+
+  document.getElementById('modal-name').textContent = c.Name || '–';
+  document.getElementById('modal-score-badge').innerHTML = `<span class="score-badge ${cls}">${icon} ${score}</span>`;
+
+  const ratingBar = (val) => {
+    const pct = val ? (val / 10 * 100) : 0;
+    return `<div class="rating-bar-wrap">
+      <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+      <span class="rating-num">${val || 0}</span>
+    </div>`;
+  };
+
+  const avg = c.Average_Rating ? Number(c.Average_Rating).toFixed(2) : '–';
+  const date = c.Date_Submitted ? new Date(c.Date_Submitted).toLocaleString() : (c.createdTime ? new Date(c.createdTime).toLocaleString() : '–');
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="detail-row"><div class="detail-key">Email</div><div class="detail-val">${c.Email||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">WhatsApp</div><div class="detail-val">${c.WhatsApp_Number||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">LinkedIn</div><div class="detail-val"><a href="${c.LinkedIn_Profile||'#'}" target="_blank" style="color:var(--accent)">${c.LinkedIn_Profile||'–'}</a></div></div>
+    <div class="detail-row"><div class="detail-key">Location</div><div class="detail-val">${c.Location||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">Based in Karachi</div><div class="detail-val">${c.Based_in_Karachi||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">Current Role</div><div class="detail-val">${c.Current_Role||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">Applying For</div><div class="detail-val">${c.Applying_For||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">Notice Period</div><div class="detail-val">${c.Notice_Period||'–'}</div></div>
+    <div class="detail-row"><div class="detail-key">Resume / CV</div><div class="detail-val"><a href="${c.Resume_CV||'#'}" target="_blank" style="color:var(--accent)">${c.Resume_CV ? 'View CV →' : '–'}</a></div></div>
+    <div class="detail-row">
+      <div class="detail-key">Skill Ratings</div>
+      <div class="detail-val">
+        <div style="margin-bottom:10px"><span style="font-size:12px;color:var(--muted)">AI Automation</span>${ratingBar(c.Rating_AI_Automation)}</div>
+        <div style="margin-bottom:10px"><span style="font-size:12px;color:var(--muted)">n8n / Make.com</span>${ratingBar(c.Rating_n8n_Make)}</div>
+        <div style="margin-bottom:10px"><span style="font-size:12px;color:var(--muted)">Vibe Coding</span>${ratingBar(c.Rating_Vibe_Coding)}</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <strong>Average: ${avg} / 10</strong>
+        </div>
+      </div>
+    </div>
+    <div class="detail-row"><div class="detail-key">Their Best Work</div><div class="detail-val">${(c.Proud_Automation_Description||'–').replace(/\n/g,'<br>')}</div></div>
+    <div class="detail-row"><div class="detail-key">Date Submitted</div><div class="detail-val">${date}</div></div>
+
+    <div class="status-update">
+      <h4>Update Status</h4>
+      <div class="status-options">
+        ${['New','Reviewed','Shortlisted','Rejected'].map(s =>
+          `<button class="status-opt ${s === selectedStatus ? 'selected' : ''}" onclick="selectStatus('${s}', this)">${s}</button>`
+        ).join('')}
+      </div>
+      <button class="update-btn" id="update-btn" onclick="updateStatus()">Save Status</button>
+      <div class="update-msg" id="update-msg">✅ Status updated!</div>
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function selectStatus(val, btn) {
+  selectedStatus = val;
+  document.querySelectorAll('.status-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+async function updateStatus() {
+  const btn = document.getElementById('update-btn');
+  const msg = document.getElementById('update-msg');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}/${currentRecord.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fields: { Status: selectedStatus } })
+    });
+
+    if (!res.ok) throw new Error('Update failed');
+
+    // Update local data
+    const idx = allCandidates.findIndex(c => c.id === currentRecord.id);
+    if (idx !== -1) allCandidates[idx].Status = selectedStatus;
+    currentRecord.Status = selectedStatus;
+
+    msg.className = 'update-msg show';
+    btn.textContent = 'Save Status';
+    btn.disabled = false;
+    renderTable();
+    setTimeout(() => msg.className = 'update-msg', 3000);
+  } catch (err) {
+    btn.textContent = '❌ Failed — retry';
+    btn.disabled = false;
+  }
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ══════════════════════════════
+//  PAGE NAV
+// ══════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'dashboard') loadCandidates();
+}
+</script>
+</body>
+</html>
