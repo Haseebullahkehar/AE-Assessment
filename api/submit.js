@@ -59,23 +59,23 @@ export default async function handler(req, res) {
     const status = score === 'Good Fit' ? 'Shortlisted' : score === 'Not Fit' ? 'Rejected' : 'New';
 
     const fields = {
-      'Name': payload.Name,
-      'Email': payload.Email,
-      'WhatsApp Number': payload.WhatsApp_Number,
-      'LinkedIn Profile': payload.LinkedIn_Profile,
-      'Based in Karachi': payload.Based_in_Karachi,
-      'Location': payload.Location,
-      'Current Role': payload.Current_Role,
-      'Applying For': payload.Applying_For,
-      'Notice Period': payload.Notice_Period,
-      'Resume / CV': payload.Resume_CV || '[File uploaded]',
-      'Rating - AI Automation': payload.Rating_AI_Automation,
-      'Rating - n8n/Make': payload.Rating_n8n_Make,
-      'Rating - Vibe Coding': payload.Rating_Vibe_Coding,
-      'Average Rating': Math.round(avg * 100) / 100,
-      'Proud Automation Description': payload.Proud_Automation_Description,
-      'Score': score,
-      'Status': status
+      Name: payload.Name,
+      Email: payload.Email,
+      WhatsApp_Number: payload.WhatsApp_Number,
+      LinkedIn_Profile: payload.LinkedIn_Profile,
+      Based_in_Karachi: payload.Based_in_Karachi,
+      Location: payload.Location,
+      Current_Role: payload.Current_Role,
+      Applying_For: payload.Applying_For,
+      Notice_Period: payload.Notice_Period,
+      Resume_CV: payload.Resume_CV || '[File uploaded]',
+      Rating_AI_Automation: payload.Rating_AI_Automation,
+      Rating_n8n_Make: payload.Rating_n8n_Make,
+      Rating_Vibe_Coding: payload.Rating_Vibe_Coding,
+      Average_Rating: Math.round(avg * 100) / 100,
+      Proud_Automation_Description: payload.Proud_Automation_Description,
+      Score: score,
+      Status: status
     };
 
     console.log('Writing to Airtable...');
