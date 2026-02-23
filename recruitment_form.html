@@ -785,12 +785,11 @@ tbody tr:hover { background: #f9fafb; }
 </head>
 <body>
 
-<!-- ── CONFIG — replace with your actual n8n webhook URL ── -->
+<!-- ── CONFIG — API endpoints use secure serverless functions ── -->
 <script>
-  const N8N_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL'; // e.g. https://your-n8n.app.n8n.cloud/webhook/recruitment-intake
-  const AIRTABLE_BASE_ID = 'YOUR_AIRTABLE_BASE_ID';
-  const AIRTABLE_TABLE_ID = 'YOUR_AIRTABLE_TABLE_ID';
-  const AIRTABLE_TOKEN = 'YOUR_AIRTABLE_TOKEN';
+  // API endpoints for secure server-side calls
+  const API_SUBMIT_URL = '/api/submit';
+  const API_CANDIDATES_URL = '/api/candidates';
 </script>
 
 <!-- NAV -->
@@ -1204,17 +1203,16 @@ async function submitForm() {
   btn.disabled = true;
 
   try {
-    // If webhook URL is set, POST to n8n; otherwise write directly to Airtable
-    if (N8N_WEBHOOK_URL && N8N_WEBHOOK_URL !== 'YOUR_N8N_WEBHOOK_URL_HERE') {
-      const res = await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error('Submission failed');
-    } else {
-      // Direct Airtable write (fallback when webhook not set)
-      await writeToAirtable(payload);
+    // Submit to secure serverless function
+    const res = await fetch(API_SUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Submission failed');
     }
 
     btn.style.display = 'none';
@@ -1227,48 +1225,6 @@ async function submitForm() {
   }
 }
 
-async function writeToAirtable(payload) {
-  // NOTE: Direct Airtable fallback cannot upload to Google Drive.
-  // File upload to Drive only works when n8n webhook URL is configured.
-  // This fallback stores a placeholder so the record is not lost.
-  const avg = (payload.Rating_AI_Automation + payload.Rating_n8n_Make + payload.Rating_Vibe_Coding) / 3;
-  const score = avg >= 7 ? 'Good Fit' : avg >= 4 ? 'Maybe' : 'Not Fit';
-  const status = score === 'Good Fit' ? 'Shortlisted' : score === 'Not Fit' ? 'Rejected' : 'New';
-
-  const fields = {
-    Name: payload.Name,
-    Email: payload.Email,
-    WhatsApp_Number: payload.WhatsApp_Number,
-    LinkedIn_Profile: payload.LinkedIn_Profile,
-    Based_in_Karachi: payload.Based_in_Karachi,
-    Location: payload.Location,
-    Current_Role: payload.Current_Role,
-    Applying_For: payload.Applying_For,
-    Notice_Period: payload.Notice_Period,
-    Resume_CV: '[File uploaded — configure n8n webhook to enable Drive upload]',
-    Rating_AI_Automation: payload.Rating_AI_Automation,
-    Rating_n8n_Make: payload.Rating_n8n_Make,
-    Rating_Vibe_Coding: payload.Rating_Vibe_Coding,
-    Average_Rating: Math.round(avg * 100) / 100,
-    Proud_Automation_Description: payload.Proud_Automation_Description,
-    Score: score,
-    Status: status
-  };
-
-  const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ fields })
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || 'Airtable write failed');
-  }
-}
 
 // ══════════════════════════════
 //  DASHBOARD
@@ -1282,16 +1238,15 @@ async function loadCandidates() {
   document.getElementById('table-container').innerHTML = '<div class="loading">Loading candidates…</div>';
 
   try {
-    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?pageSize=100`;
-    const res = await fetch(url, {
-      headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-    });
+    const res = await fetch(API_CANDIDATES_URL);
+    if (!res.ok) throw new Error('Failed to load candidates');
+    
     const data = await res.json();
     allCandidates = (data.records || []).map(r => ({ id: r.id, ...r.fields }));
     updateStats();
     renderTable();
   } catch (err) {
-    document.getElementById('table-container').innerHTML = '<div class="loading">⚠️ Failed to load. Check your Airtable token.</div>';
+    document.getElementById('table-container').innerHTML = '<div class="loading">⚠️ Failed to load candidates.</div>';
   }
 }
 
@@ -1439,13 +1394,13 @@ async function updateStatus() {
   btn.textContent = 'Saving…';
 
   try {
-    const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}/${currentRecord.id}`, {
+    const res = await fetch(API_CANDIDATES_URL, {
       method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fields: { Status: selectedStatus } })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        recordId: currentRecord.id, 
+        status: selectedStatus 
+      })
     });
 
     if (!res.ok) throw new Error('Update failed');

@@ -26,22 +26,29 @@ This project is deployed on Vercel.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Haseebullahkehar/AE-Assessment.git)
 
-## ⚠️ Configuration Required
+## ✅ Configuration Status
 
-**Before deploying**, you must configure your API credentials. See [CONFIG.md](CONFIG.md) for detailed instructions.
+**Secure API architecture implemented!** This project uses Vercel serverless functions to keep credentials safe.
 
-Quick setup:
-1. Edit `recruitment_form.html` (line ~790)
-2. Replace placeholder values with your actual credentials
-3. Commit and push to GitHub
-4. Deploy to Vercel
+- ✅ Serverless API endpoints created (`/api/submit` and `/api/candidates`)
+- ✅ Credentials stored securely in environment variables
+- ✅ No sensitive data exposed in client-side code
+- ✅ Ready to deploy to Vercel
 
-```javascript
-const N8N_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL';
-const AIRTABLE_BASE_ID = 'YOUR_AIRTABLE_BASE_ID';
-const AIRTABLE_TABLE_ID = 'YOUR_AIRTABLE_TABLE_ID';
-const AIRTABLE_TOKEN = 'YOUR_AIRTABLE_TOKEN';
-```
+### Quick Deploy to Vercel
+
+1. Click the button below to deploy:
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Haseebullahkehar/AE-Assessment.git)
+
+2. Add environment variables in Vercel dashboard:
+   - `N8N_WEBHOOK_URL`
+   - `AIRTABLE_BASE_ID`
+   - `AIRTABLE_TABLE_ID`
+   - `AIRTABLE_TOKEN`
+
+3. Deploy and your site will be live!
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ## Local Development
 
@@ -54,14 +61,14 @@ git clone https://github.com/Haseebullahkehar/AE-Assessment.git
 
 3. Open `index.html` or `recruitment_form.html` in your browser
 
-## Security Note
+## Security
 
-⚠️ **Never commit real API tokens to public repositories!** 
+✅ **Secure Architecture**
+- API credentials stored in Vercel environment variables
+- Serverless functions handle all API calls
+- No sensitive data exposed in client-side code
 
-For production deployments:
-- Use Vercel environment variables
-- Keep sensitive data out of source code
-- Regularly rotate API tokens
+For local development, copy `.env.example` to `.env` and add your credentials.
 
 ## License
 
