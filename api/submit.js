@@ -58,12 +58,16 @@ export default async function handler(req, res) {
     const score = avg >= 7 ? 'Good Fit' : avg >= 4 ? 'Maybe' : 'Not Fit';
     const status = score === 'Good Fit' ? 'Shortlisted' : score === 'Not Fit' ? 'Rejected' : 'New';
 
+    // Convert Based_in_Karachi text to boolean (checkbox field)
+    const isInKarachi = payload.Based_in_Karachi?.toLowerCase().includes('yes') || 
+                        payload.Based_in_Karachi?.toLowerCase().includes('i am based in karachi');
+
     const fields = {
       Name: payload.Name,
       Email: payload.Email,
       WhatsApp_Number: payload.WhatsApp_Number,
       LinkedIn_Profile: payload.LinkedIn_Profile,
-      Based_in_Karachi: payload.Based_in_Karachi,
+      Based_in_Karachi: isInKarachi,  // Convert to boolean for checkbox
       Location: payload.Location,
       Current_Role: payload.Current_Role,
       Applying_For: payload.Applying_For,
