@@ -29,7 +29,7 @@ The application now uses **secure serverless functions** - no credentials in the
    Click "Environment Variables" and add these 4 variables:
 
    ```
-   N8N_WEBHOOK_URL = https://scaletopia.app.n8n.cloud/webhook-test/recruitment-intake
+   N8N_WEBHOOK_URL = https://scaletopia.app.n8n.cloud/webhook/recruitment-intake
    AIRTABLE_BASE_ID = app6WIbM8JbcYSrs7
    AIRTABLE_TABLE_ID = tblAmJXZy1HOYsDwG
    AIRTABLE_TOKEN = YOUR_AIRTABLE_PERSONAL_ACCESS_TOKEN_HERE

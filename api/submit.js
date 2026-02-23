@@ -21,6 +21,9 @@ export default async function handler(req, res) {
   try {
     const payload = req.body;
 
+    // Log for debugging (visible in Vercel logs)
+    console.log('Received submission:', { name: payload.Name, email: payload.Email });
+
     // Get credentials from environment variables
     const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
     const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -29,17 +32,25 @@ export default async function handler(req, res) {
 
     // Try n8n webhook first
     if (N8N_WEBHOOK_URL && N8N_WEBHOOK_URL !== 'YOUR_N8N_WEBHOOK_URL_HERE') {
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      try {
+        const response = await fetch(N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-      if (!response.ok) {
-        throw new Error('N8N webhook failed');
+        if (!response.ok) {
+          console.error('N8N webhook failed:', response.status, response.statusText);
+          throw new Error(`N8N webhook failed: ${response.status}`);
+        }
+
+        console.log('Successfully submitted to n8n webhook');
+        return res.status(200).json({ success: true, message: 'Submitted successfully' });
+      } catch (webhookError) {
+        console.error('N8N webhook error:', webhookError.message);
+        console.log('Falling back to direct Airtable write...');
+        // Continue to Airtable fallback
       }
-
-      return res.status(200).json({ success: true, message: 'Submitted successfully' });
     }
 
     // Fallback to direct Airtable write
@@ -67,6 +78,7 @@ export default async function handler(req, res) {
       Status: status
     };
 
+    console.log('Writing to Airtable...');
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`,
       {
@@ -80,13 +92,16 @@ export default async function handler(req, res) {
     );
 
     if (!airtableResponse.ok) {
-      const error = await airtableResponse.json();
-      throw new Error(error.error?.message || 'Airtable write failed');
+      const errorText = await airtableResponse.text();
+      console.error('Airtable error:', airtableResponse.status, errorText);
+      throw new Error(`Airtable write failed: ${airtableResponse.status}`);
     }
 
+    const result = await airtableResponse.json();
+    console.log('Successfully written to Airtable:', result.id);
     return res.status(200).json({ success: true, message: 'Submitted successfully' });
   } catch (error) {
-    console.error('Submission error:', error);
+    console.error('Submission error:', error.message, error.stack);
     return res.status(500).json({ error: error.message || 'Submission failed' });
   }
 }

@@ -1211,14 +1211,16 @@ async function submitForm() {
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.error || 'Submission failed');
+      const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('Submission failed:', res.status, errorData);
+      throw new Error(errorData.error || `Submission failed (${res.status})`);
     }
 
     btn.style.display = 'none';
     successBanner.className = 'success-banner show';
   } catch (err) {
-    errorBanner.textContent = '❌ Submission failed. Please try again or contact us.';
+    console.error('Submission error:', err);
+    errorBanner.textContent = `❌ ${err.message || 'Submission failed. Please try again or contact us.'}`;
     errorBanner.className = 'error-banner show';
     btn.textContent = 'Submit Application →';
     btn.disabled = false;

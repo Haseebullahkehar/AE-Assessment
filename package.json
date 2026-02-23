@@ -1,0 +1,7 @@
+{
+  "name": "ae-assessment",
+  "version": "1.0.0",
+  "description": "Automation Engineer recruitment portal",
+  "private": true,
+  "type": "module"
+}

@@ -24,7 +24,7 @@ Your code is now on GitHub with a secure serverless architecture:
 Before deploying, add these 4 environment variables:
 
 ```bash
-N8N_WEBHOOK_URL=https://scaletopia.app.n8n.cloud/webhook-test/recruitment-intake
+N8N_WEBHOOK_URL=https://scaletopia.app.n8n.cloud/webhook/recruitment-intake
 AIRTABLE_BASE_ID=app6WIbM8JbcYSrs7
 AIRTABLE_TABLE_ID=tblAmJXZy1HOYsDwG
 AIRTABLE_TOKEN=<your-actual-token-from-local-.env-file>
